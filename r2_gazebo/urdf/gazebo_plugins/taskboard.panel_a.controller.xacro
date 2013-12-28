@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<robot name="panel_a" xmlns:xacro="http://wiki.ros.org/xacro">
-
-  <gazebo>
-    <plugin name="panel_a_interface" filename="libgazebo_taskboard.so">
-    </plugin>
-  </gazebo>
-
-</robot>
