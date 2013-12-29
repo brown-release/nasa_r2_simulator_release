@@ -1,0 +1,12 @@
+Source: ros-hydro-r2-controllers-gazebo
+Section: misc
+Priority: extra
+Maintainer: David Lu!! <davidvlu@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), ros-hydro-actionlib, ros-hydro-angles, ros-hydro-catkin, ros-hydro-control-msgs, ros-hydro-control-toolbox, ros-hydro-controller-interface, ros-hydro-diagnostic-msgs, ros-hydro-effort-controllers, ros-hydro-eigen-conversions, ros-hydro-filters, ros-hydro-geometry-msgs, ros-hydro-joint-state-controller, ros-hydro-kdl-parser, ros-hydro-message-filters, ros-hydro-orocos-kdl, ros-hydro-pluginlib, ros-hydro-r2-msgs, ros-hydro-realtime-tools, ros-hydro-roscpp, ros-hydro-rospy, ros-hydro-std-msgs, ros-hydro-tf, ros-hydro-tf-conversions, ros-hydro-tf2-kdl, ros-hydro-trajectory-msgs, ros-hydro-urdf
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-hydro-r2-controllers-gazebo
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-hydro-actionlib, ros-hydro-angles, ros-hydro-control-msgs, ros-hydro-control-toolbox, ros-hydro-controller-interface, ros-hydro-diagnostic-msgs, ros-hydro-effort-controllers, ros-hydro-eigen-conversions, ros-hydro-filters, ros-hydro-gazebo-ros, ros-hydro-gazebo-ros-control, ros-hydro-gazebo-ros-pkgs, ros-hydro-geometry-msgs, ros-hydro-joint-state-controller, ros-hydro-kdl-parser, ros-hydro-message-filters, ros-hydro-orocos-kdl, ros-hydro-pluginlib, ros-hydro-r2-msgs, ros-hydro-realtime-tools, ros-hydro-roscpp, ros-hydro-rospy, ros-hydro-std-msgs, ros-hydro-tf, ros-hydro-tf-conversions, ros-hydro-tf2-kdl, ros-hydro-trajectory-msgs, ros-hydro-urdf
+Description: r2_controllers_gazebo
