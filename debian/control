@@ -1,0 +1,12 @@
+Source: ros-hydro-gazebo-interface
+Section: misc
+Priority: extra
+Maintainer: David Lu!! <davidvlu@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), ros-hydro-catkin, ros-hydro-r2-msgs, ros-hydro-sensor-msgs
+Homepage: http://ros.org/wiki/gazebo_interface
+Standards-Version: 3.9.2
+
+Package: ros-hydro-gazebo-interface
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-hydro-r2-msgs, ros-hydro-sensor-msgs
+Description: The gazebo_interface package
