@@ -1,3 +1,27 @@
+## nasa_r2_simulator (hydro) - 0.5.5-0
+
+The packages in the `nasa_r2_simulator` repository were released into the `hydro` distro by running `/usr/bin/bloom-release --rosdistro hydro --track hydro nasa_r2_simulator -e` on `Thu, 24 Jul 2014 20:08:39 -0000`
+
+These packages were released:
+- `gazebo_gripper`
+- `gazebo_interface`
+- `gazebo_taskboard`
+- `nasa_r2_simulator`
+- `r2_gazebo`
+
+Version of package(s) in repository `nasa_r2_simulator`:
+- rosdistro version: `0.5.3-1`
+- old version: `0.5.4-1`
+- new version: `0.5.5-0`
+
+Versions of tools used:
+- bloom version: `0.5.10`
+- catkin_pkg version: `0.2.2`
+- rosdep version: `0.10.28`
+- rosdistro version: `0.3.5`
+- vcstools version: `0.1.31`
+
+
 ## nasa_r2_simulator - 0.5.4-1
 
 User `dlu@serenity` released the packages in the `nasa_r2_simulator` repository by running `/usr/bin/bloom-release nasa_r2_simulator --track hydro --ros-distro hydro` on `Sun, 29 Dec 2013 22:04:39 -0000`
