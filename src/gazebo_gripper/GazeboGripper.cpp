@@ -1,4 +1,4 @@
-#include "gazebo_gripper/GazeboGripper.h"
+#include <gazebo_gripper/GazeboGripper.h>
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/Joint.hh>
 #include <gazebo/physics/World.hh>
@@ -37,7 +37,7 @@ void GazeboGripper::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     }
     else
     {
-        updateTime = 1/(_sdf->Get<double>("updateRate"));
+        updateTime = 1/(_sdf->GetElement("updateRate")->Get<double>());
     }
 
     if (!_sdf->HasElement("attachWait"))
@@ -47,7 +47,7 @@ void GazeboGripper::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     }
     else
     {
-        attachWait = _sdf->Get<double>("attachWait");
+        attachWait = _sdf->GetElement("attachWait")->Get<double>();
     }
 
     if (!_sdf->HasElement("detachWait"))
@@ -57,7 +57,7 @@ void GazeboGripper::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     }
     else
     {
-        detachWait = _sdf->Get<double>("detachWait");
+        detachWait = _sdf->GetElement("detachWait")->Get<double>();
     }
 
     if (!_sdf->HasElement("maxRelativeMotionRate"))
@@ -67,7 +67,7 @@ void GazeboGripper::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     }
     else
     {
-        maxRelativeMotionRate = _sdf->Get<double>("maxRelativeMotionRate");
+        maxRelativeMotionRate = _sdf->GetElement("maxRelativeMotionRate")->Get<double>();
     }
 
     if (!_sdf->HasElement("gripperAttachLink"))
@@ -77,7 +77,7 @@ void GazeboGripper::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
     }
     else
     {
-        gripperAttachLink = _sdf->Get<std::string>("gripperAttachLink");
+        gripperAttachLink = _sdf->GetElement("gripperAttachLink")->Get<std::string>();
         if (!modelPtr->GetLink(gripperAttachLink))
         {
             ROS_FATAL((std::string("GazeboGripper plugin couldn't find gripperAttachLink (%s) in model, cannot proceed.\n")
