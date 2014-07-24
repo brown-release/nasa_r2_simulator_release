@@ -1,0 +1,12 @@
+Source: ros-hydro-gazebo-taskboard
+Section: misc
+Priority: extra
+Maintainer: Stephen Hart <stephen.hart@nasa.gov>
+Build-Depends: debhelper (>= 9.0.0), gazebo, ros-hydro-actionlib, ros-hydro-catkin, ros-hydro-geometry-msgs, ros-hydro-message-generation, ros-hydro-message-runtime, ros-hydro-pluginlib, ros-hydro-roscpp, ros-hydro-rospy, ros-hydro-rostest, ros-hydro-std-msgs
+Homepage: http://wiki.ros.org/gazebo_taskboard
+Standards-Version: 3.9.2
+
+Package: ros-hydro-gazebo-taskboard
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-hydro-actionlib, ros-hydro-geometry-msgs, ros-hydro-message-generation, ros-hydro-message-runtime, ros-hydro-pluginlib, ros-hydro-roscpp, ros-hydro-rospy, ros-hydro-rostest, ros-hydro-std-msgs
+Description: Gazebo Driver for Simulated ISS Taskboard
