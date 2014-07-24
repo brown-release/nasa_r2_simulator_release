@@ -7,6 +7,7 @@ project(gazebo_taskboard)
 find_package(catkin REQUIRED COMPONENTS message_runtime message_generation actionlib geometry_msgs pluginlib roscpp rospy rostest std_msgs)
 
 ## System dependencies are found with CMake's conventions
+find_package(PkgConfig)
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(SDFormat REQUIRED)
 find_package(gazebo REQUIRED)
@@ -27,14 +28,12 @@ endforeach ()
 
 ## Generate messages in the 'msg' folder
 add_message_files(
-  DIRECTORY msg
   FILES
   TaskboardPanelA.msg
 )
 
 ## Generate services in the 'srv' folder
 add_service_files(
-  DIRECTORY srv
   FILES
   ManipulateNumPad.srv
   ManipulatePowerCover.srv
@@ -54,19 +53,25 @@ generate_messages(
 ###################################
 ## The catkin_package macro generates cmake config files for your package
 ## Declare things to be passed to dependent projects
+## INCLUDE_DIRS: uncomment this if you package contains header files
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
+   INCLUDE_DIRS include
 #  LIBRARIES gazebo_taskboard
-  CATKIN_DEPENDS message_runtime message_generation actionlib geometry_msgs pluginlib roscpp rospy rostest std_msgs
+   CATKIN_DEPENDS message_runtime message_generation actionlib geometry_msgs pluginlib roscpp rospy rostest std_msgs
 #  DEPENDS system_lib
 )
 
 ###########
 ## Build ##
 ###########
+
+if (PKG_CONFIG_FOUND)
+  pkg_check_modules(GAZEBO gazebo)
+endif()
+
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
@@ -77,7 +82,7 @@ include_directories(include
 )
 
 ## Declare a cpp library
-add_library(gazebo_taskboard src/GazeboTaskboard.cpp include/gazebo_taskboard/GazeboTaskboard.h)
+add_library(gazebo_taskboard src/gazebo_taskboard/GazeboTaskboard.cpp include/gazebo_taskboard/GazeboTaskboard.h)
 target_link_libraries(gazebo_taskboard ${SDFormat_LIBRARIES} ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
 set_target_properties(gazebo_taskboard PROPERTIES LINK_FLAGS "${ld_flags}")
 set_target_properties(gazebo_taskboard PROPERTIES COMPILE_FLAGS "${cxx_flags}")

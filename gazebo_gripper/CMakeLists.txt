@@ -1,35 +1,32 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(gazebo_gripper)
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS)
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  rospy
+  r2_msgs
+  sensor_msgs
+  std_msgs
+)
 
-## System dependencies are found with CMake's conventions
 find_package(gazebo REQUIRED)
 find_package(SDFormat REQUIRED)
 
-# parse gazebo flags
-set(cxx_flags)
-foreach (item ${GAZEBO_CFLAGS})
-  set(cxx_flags "${cxx_flags} ${item}")
-endforeach ()
-set(ld_flags)
-foreach (item ${GAZEBO_LDFLAGS})
-  set(ld_flags "${ld_flags} ${item}")
-endforeach ()
-
 catkin_package(
-  INCLUDE_DIRS include
+   INCLUDE_DIRS include
 #  LIBRARIES gazebo_gripper
-#  CATKIN_DEPENDS other_catkin_pkg
+#  CATKIN_DEPENDS roscpp rospy sensor_msgs std_msgs
 #  DEPENDS system_lib
 )
 
 ###########
 ## Build ##
 ###########
+find_package(PkgConfig)
+
+if (PKG_CONFIG_FOUND)
+  pkg_check_modules(GAZEBO gazebo)
+endif()
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
@@ -40,7 +37,7 @@ include_directories(include
 )
 
 ## Declare a cpp library
-add_library(gazebo_gripper src/GazeboGripper.cpp include/gazebo_gripper/GazeboGripper.h)
+add_library(gazebo_gripper src/gazebo_gripper/GazeboGripper.cpp include/gazebo_gripper/GazeboGripper.h)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(gazebo_gripper ${SDFormat_LIBRARIES} ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
@@ -67,4 +64,3 @@ install(DIRECTORY include/${PROJECT_NAME}/
   FILES_MATCHING PATTERN "*.h"
   PATTERN ".svn" EXCLUDE
 )
-
