@@ -9,7 +9,7 @@
  * @version 1.1
  */
 
-#include "gazebo_taskboard/GazeboTaskboard.h"
+#include <gazebo_taskboard/GazeboTaskboard.h>
 #include <boost/bind.hpp>
 #include <stdio.h>
 #include <math.h>
@@ -67,10 +67,10 @@ enum LedColor
 
 /**
  * @brief The Led structrure describes the LED in the simulator and holds current led state.
- * 
+ *
  * The structure also holds some led configuration parameters since leds configuration is
  * a multi-step process (due to physics engine peculiarities).
- * 
+ *
  * @author KennyAlive
  * @version 1.0
  */
@@ -119,9 +119,9 @@ struct GazeboTaskboardSlot1::Led
 
 /**
  * @brief This structure holds all led instances.
- * 
- * Also TaskboardLeds provides leds convenient initialization methods that initialize all leds at one. 
- * 
+ *
+ * Also TaskboardLeds provides leds convenient initialization methods that initialize all leds at one.
+ *
  * @author KennyAlive
  * @version 1.0
  */
@@ -156,35 +156,35 @@ struct GazeboTaskboardSlot1::TaskboardLeds
 
 /**
  * @brief This structure holds state of the main taskboard elements.
- * 
+ *
  * @author KennyAlive
  * @version 1.0
  */
 struct GazeboTaskboardSlot1::TaskboardSlot1State
 {
     /// @brief whether the beautiful red cover is open
-    bool isCoverOpen; 
+    bool isCoverOpen;
 
     /// @brief power switch state (UP/DOWN)
-    TwoWayToggleSwitchState powerSwitchState; 
-    
+    TwoWayToggleSwitchState powerSwitchState;
+
     /// @brief Rocker switch state (CENTER/UP/DOWN)
-    ThreeWayToggleSwitchState rockerSwitchA01State; 
+    ThreeWayToggleSwitchState rockerSwitchA01State;
 
     /// @brief numpad buttons SEL/UNSEL state
     bool numPadButtonsSelectedState[NUM_PAD_BUTTONS_COUNT];
 
     /// @brief whether the safe toggle in the OUT state
-    bool isSafeToggleOut[SAFE_TOGGLES_COUNT]; 
+    bool isSafeToggleOut[SAFE_TOGGLES_COUNT];
 
     /// @brief A03 toggle state.
     /// If isSafeToggleOut[0] == true this is not used and state is defined as OUT
-    TwoWayToggleSwitchState toggleA03State; 
-    
+    TwoWayToggleSwitchState toggleA03State;
+
     /// @brief A04 toggle state.
     /// if isSafeToggleOut[1] == true this is not used and state is defined as OUT
-    ThreeWayToggleSwitchState toggleA04State; 
-    
+    ThreeWayToggleSwitchState toggleA04State;
+
     /// @brief A05 toggle state.
     /// if isSafeToggleOut[2] == true this is not used and state is defined as OUT
     TwoWayToggleSwitchState toggleA05State;
@@ -213,7 +213,7 @@ struct GazeboTaskboardSlot1::TaskboardSlot1State
 
 /**
  * @brief Holds base manipulation parameters: startTime and duration.
- * 
+ *
  * @author KennyAlive
  * @version 1.0
  */
@@ -259,7 +259,7 @@ struct SafeToggleManipulationState : BaseManipulationState
 {
     /// @brief generic value parameter
     double value;
-    
+
     /// @brief Sets generic value to zero.
     SafeToggleManipulationState()
     : value(0.0)
@@ -268,32 +268,32 @@ struct SafeToggleManipulationState : BaseManipulationState
 
 /**
  * @brief Holds entire manipulation state and used to manipulate taskboard programatically.
- * 
- * Manipulation is used for testing (simulatates robot actions) and when there is a 
+ *
+ * Manipulation is used for testing (simulatates robot actions) and when there is a
  * need to affect taskboard from the code.
  * Manipulation uses physics to change taskboard state (like applying force to the button
  * or torque to the toggle).
- * 
+ *
  * @author KennyAlive
  * @version 1.0
  */
 struct GazeboTaskboardSlot1::ManipulationState
 {
     /// @brief Power cover manipulation state
-    PowerCoverManipulationState powerCover; 
+    PowerCoverManipulationState powerCover;
     /// @brief Power switch manipulation state
-    PowerSwitchManipulationState powerSwitch; 
+    PowerSwitchManipulationState powerSwitch;
     /// @brief Rocker switch manipulation sate
-    RockerSwitchManipulationState rockerSwitch; 
+    RockerSwitchManipulationState rockerSwitch;
     /// @brief Num Pad manipulation sate
-    NumPadButtonManipulationState numPadButtons[NUM_PAD_BUTTONS_COUNT]; 
+    NumPadButtonManipulationState numPadButtons[NUM_PAD_BUTTONS_COUNT];
     /// @brief A03/A04/A05 safe toggles manipulation sate
-    SafeToggleManipulationState safeToggles[SAFE_TOGGLES_COUNT][2]; 
+    SafeToggleManipulationState safeToggles[SAFE_TOGGLES_COUNT][2];
 };
 
 /**
  * @brief Converts degrees to radians.
- * 
+ *
  * @param degrees the angle value in degrees
  * @return the angle value in radians
  */
@@ -314,7 +314,7 @@ GazeboTaskboardSlot1::GazeboTaskboardSlot1()
 
 /**
  * @brief Plugin's desctructor.
- * 
+ *
  * Stops listening to the world update event.
  */
 GazeboTaskboardSlot1::~GazeboTaskboardSlot1()
@@ -328,7 +328,7 @@ GazeboTaskboardSlot1::~GazeboTaskboardSlot1()
 
 /**
  * @brief Initializes plugin by providing associated model.
- * 
+ *
  * @param _parent the models associated with this plugin instance
  * @param _sdf the SDF definition that holds models parameters
  */
@@ -351,11 +351,11 @@ void GazeboTaskboardSlot1::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
         boost::bind(&GazeboTaskboardSlot1::OnUpdate, this));
 
     // Init services
-    srv_manipulatePowerCover = node.advertiseService("manipulate_power_cover", 
+    srv_manipulatePowerCover = node.advertiseService("manipulate_power_cover",
                                                      &GazeboTaskboardSlot1::ManipulatePowerCover, this);
-    srv_manipulatePowerSwitch = node.advertiseService("manipulate_power_switch", 
+    srv_manipulatePowerSwitch = node.advertiseService("manipulate_power_switch",
                                                      &GazeboTaskboardSlot1::ManipulatePowerSwitch, this);
-    srv_manipulateRockerSwitch = node.advertiseService("manipulate_rocker_switch_a01", 
+    srv_manipulateRockerSwitch = node.advertiseService("manipulate_rocker_switch_a01",
                                                      &GazeboTaskboardSlot1::ManipulateRockerSwitch, this);
     srv_manipulateNumPad = node.advertiseService("manipulate_numpad",
                                                      &GazeboTaskboardSlot1::ManipulateNumPad, this);
@@ -379,12 +379,12 @@ void GazeboTaskboardSlot1::Load(physics::ModelPtr _parent, sdf::ElementPtr _sdf)
 
 /**
  * @brief Gets the model's link by the link name.
- * 
+ *
  * The function also prints ROS fatal message if fails to get the link.
- * 
+ *
  * @param model the model to get link from
  * @param linkName the link name
- * 
+ *
  * @return the link object or null if the model does not have the requested link
  */
 static physics::LinkPtr getLink(physics::ModelPtr model, const std::string& linkName)
@@ -399,7 +399,7 @@ static physics::LinkPtr getLink(physics::ModelPtr model, const std::string& link
 
 /**
  * @brief Initializes all links that are used by the plugin.
- * 
+ *
  * @return true if the links are initialized successfully, otherwise false
  */
 bool GazeboTaskboardSlot1::InitLinks()
@@ -408,7 +408,7 @@ bool GazeboTaskboardSlot1::InitLinks()
     {
         physics::LinkPtr& linkRef;
         std::string linkName;
-    } linksInfo[] = 
+    } linksInfo[] =
     {
         { linkPowerCover        , "taskboard_slot1_switch1_cover"   },
         { linkPowerSwitch       , "taskboard_slot1_switch1"         },
@@ -443,12 +443,12 @@ bool GazeboTaskboardSlot1::InitLinks()
 
 /**
  * @brief Gets the model's joint by the joint name.
- * 
+ *
  * The function also prints ROS fatal message if fails to get the joint.
- * 
+ *
  * @param model the model to get joint from
  * @param jointName the joint name
- * 
+ *
  * @return the joint object or null if the model does not have the requested joint
  */
 static physics::JointPtr getJoint(physics::ModelPtr model, const std::string& jointName)
@@ -463,7 +463,7 @@ static physics::JointPtr getJoint(physics::ModelPtr model, const std::string& jo
 
 /**
  * @brief Initializes all joints that are used by the plugin.
- * 
+ *
  * @return true if the joints are initialized successfully, otherwise false
  */
 bool GazeboTaskboardSlot1::InitJoints()
@@ -472,7 +472,7 @@ bool GazeboTaskboardSlot1::InitJoints()
     {
         physics::JointPtr& jointRef;
         std::string jointName;
-    } jointsInfo[] = 
+    } jointsInfo[] =
     {
         { safeTogglesRevoluteJoints[0] , "taskboard_lower/taskboard_slot1_switch2" },
         { safeTogglesRevoluteJoints[1] , "taskboard_lower/taskboard_slot1_switch3" },
@@ -492,7 +492,7 @@ bool GazeboTaskboardSlot1::InitJoints()
 
 /**
  * @brief Derives current state from the model's positional configuration.
- * 
+ *
  * The state is derived only for elements that have more then one stable
  * position. For elements that have only single stable position (like rocker switch)
  * state is not derived from the model but directly initialized to single stable position.
@@ -526,7 +526,7 @@ void GazeboTaskboardSlot1::DeriveStateFromModel()
     {
         state->toggleA04State = eThreeWayState_Center;
     }
-    else 
+    else
     {
         state->toggleA04State = eThreeWayState_Down;
     }
@@ -539,13 +539,13 @@ void GazeboTaskboardSlot1::DeriveStateFromModel()
 
 /**
  * @brief Simulates expected behavior according to the current state.
- * 
+ *
  * The method is called regularly by Gazebo which allows the plugin
  * to function as an active object.
  */
 void GazeboTaskboardSlot1::OnUpdate()
 {
-    // If condition is true then LED models are available and 
+    // If condition is true then LED models are available and
     // we should set them up properly
     if (firstFrameInitializationDone && !ledsReady)
     {
@@ -555,7 +555,7 @@ void GazeboTaskboardSlot1::OnUpdate()
         return;
     }
     // Create LED models on the first update frame.
-    // This is necessary since physics engine is not ready when Load is called 
+    // This is necessary since physics engine is not ready when Load is called
     if (!firstFrameInitializationDone)
     {
         leds->CreateModels(model->GetWorld());
@@ -697,7 +697,7 @@ void GazeboTaskboardSlot1::MonitorRockerSwitchA01StateChanges()
             }
         }
     }
-    else 
+    else
     {
         // Check if switch just returned to center position
         if (state->rockerSwitchA01State != eThreeWayState_Center)
@@ -736,7 +736,7 @@ void GazeboTaskboardSlot1::MonitorNumpadStateChanges()
     for (int i = 0; i < NUM_PAD_BUTTONS_COUNT; i++)
     {
         const double offset = linksNumPad[i]->GetRelativePose().pos.y;
-        
+
         bool selected = (offset < selRelOffset + epsilon);
         if (selected ^ state->numPadButtonsSelectedState[i])
         {
@@ -752,12 +752,12 @@ void GazeboTaskboardSlot1::MonitorNumpadStateChanges()
 
 /**
  * @brief Makes joint transition from current OUT position to nearest UP/DOWN state.
- * 
+ *
  * @param link the link that is in transition state
  * @param joint the revolute joint of the link
- * @param state if the method detects that transition is over then final state 
+ * @param state if the method detects that transition is over then final state
  *              is returned via this reference
- * 
+ *
  * @return true if the transition is over, otherwise false
  */
 bool GazeboTaskboardSlot1::UpdateTransitionFromOutState2Way(
@@ -796,12 +796,12 @@ bool GazeboTaskboardSlot1::UpdateTransitionFromOutState2Way(
 
 /**
  * @brief Makes joint transition from current OUT position to nearest UP/CENTER/DOWN state.
- * 
+ *
  * @param link the link that is in transition state
  * @param joint the revolute joint of the link
- * @param state if the method detects that transition is over then final state 
+ * @param state if the method detects that transition is over then final state
  *              is returned via this reference
- * 
+ *
  * @return true if the transition is over, otherwise false
  */
 bool GazeboTaskboardSlot1::UpdateTransitionFromOutState3Way(
@@ -814,7 +814,7 @@ bool GazeboTaskboardSlot1::UpdateTransitionFromOutState3Way(
 
     math::Pose pose = link->GetRelativePose();
     double angle = pose.rot.GetRoll();
-    
+
     if (angle > upDirLimit + threshold && angle < M_PI_2 - threshold)
     {
         math::Vector3 torque = computeEmpiricalTorque(angle - (M_PI_2 - halfAngle/2), 0.8, 1.0, 1.5, 15);
@@ -842,7 +842,7 @@ bool GazeboTaskboardSlot1::UpdateTransitionFromOutState3Way(
         joint->SetHighStop(0, math::Angle(SAFE_TOGGLE_UPPER_LIMIT_ANGLE + threshold));
         joint->SetLowStop(0, math::Angle(SAFE_TOGGLE_UPPER_LIMIT_ANGLE - threshold));
         link->SetTorque(ZERO_VECTOR);
-    } 
+    }
     else
     {
         state = eThreeWayState_Center;
@@ -859,11 +859,11 @@ bool GazeboTaskboardSlot1::UpdateTransitionFromOutState3Way(
  */
 void GazeboTaskboardSlot1::MonitorSafeTogglesStateChanges()
 {
-    // The pull out distance as defined in URDF files. 
+    // The pull out distance as defined in URDF files.
     const double pullOutDistance = 0.002;
     // The delta below should be smaller then pull out offset.
     const double delta = 0.0004;
-    
+
     // Check which joints is pulled out
     bool isOut[SAFE_TOGGLES_COUNT];
     float offsets[SAFE_TOGGLES_COUNT]; // toggles pulled out offsets
@@ -880,11 +880,11 @@ void GazeboTaskboardSlot1::MonitorSafeTogglesStateChanges()
         if (!state->isSafeToggleOut[i] && isOut[i])
         {
             state->isSafeToggleOut[i] = true;
-            
+
             // Release revolute joint
             safeTogglesRevoluteJoints[i]->SetHighStop(0, math::Angle(SAFE_TOGGLE_UPPER_LIMIT_ANGLE));
             safeTogglesRevoluteJoints[i]->SetLowStop(0, math::Angle(SAFE_TOGGLE_LOWER_LIMIT_ANGLE));
-            
+
             // turn off LEDs
             switch (i)
             {
@@ -977,9 +977,9 @@ void GazeboTaskboardSlot1::PublishState()
     msg.PANEL_POWER_COVER  = state->isCoverOpen ? UP : DOWN;
     msg.PANEL_POWER_SWITCH = state->powerSwitchState == eTwoWayState_Up ? UP : DOWN;
     msg.PANEL_POWER_LED    = leds->powerSwitchLed.isOn ? ON : OFF;
-    
+
     msg.A01_ROCKER_SWITCH  = state->rockerSwitchA01State == eThreeWayState_Center
-                              ? CENTER 
+                              ? CENTER
                               : (state->rockerSwitchA01State == eThreeWayState_Up ? UP : DOWN);
 
     msg.A01_ROCKER_LED_TOP    = leds->rockerSwitchUpLed.isOn ? ON : OFF;
@@ -1004,24 +1004,24 @@ void GazeboTaskboardSlot1::PublishState()
     msg.A02_NUM_PAD_C1 = state->numPadButtonsSelectedState[6] ? SEL : UNSEL;
     msg.A02_NUM_PAD_C2 = state->numPadButtonsSelectedState[7] ? SEL : UNSEL;
     msg.A02_NUM_PAD_C3 = state->numPadButtonsSelectedState[8] ? SEL : UNSEL;
-    
+
     msg.A03_LED        = leds->toggleA03Led.isOn ? ON : OFF;
     msg.A04_LED_TOP    = leds->toggleA04TopLed.isOn ? ON : OFF;
     msg.A04_LED_BOTTOM = leds->toggleA04BottomLed.isOn ? ON : OFF;
     msg.A05_LED        = leds->toggleA05Led.isOn ? ON : OFF;
 
-    msg.A03_TOGGLE = state->isSafeToggleOut[0] 
-                      ? OUT 
+    msg.A03_TOGGLE = state->isSafeToggleOut[0]
+                      ? OUT
                       : (state->toggleA03State == eTwoWayState_Up ? UP : DOWN);
 
-    msg.A04_TOGGLE = state->isSafeToggleOut[1] 
-                      ? OUT 
+    msg.A04_TOGGLE = state->isSafeToggleOut[1]
+                      ? OUT
                       : (state->toggleA04State == eThreeWayState_Center
                           ? CENTER
                           : (state->toggleA04State == eThreeWayState_Up ? UP : DOWN));
 
-    msg.A05_TOGGLE = state->isSafeToggleOut[2] 
-                      ? OUT 
+    msg.A05_TOGGLE = state->isSafeToggleOut[2]
+                      ? OUT
                       : (state->toggleA05State == eTwoWayState_Up ? UP : DOWN);
 
     // Finally publish the message
@@ -1030,8 +1030,8 @@ void GazeboTaskboardSlot1::PublishState()
 
 /**
  * @brief Turns on/off the given LED.
- * 
- * @param led the Led instance 
+ *
+ * @param led the Led instance
  * @param on true to turn on the LED, false to turn off the LED
  */
 void GazeboTaskboardSlot1::SetLedState(Led& led, bool on)
@@ -1050,7 +1050,7 @@ void GazeboTaskboardSlot1::SetLedState(Led& led, bool on)
     // Get current pose
     math::Pose pose = led.onModel->GetRelativePose();
     math::Pose pose2 = led.offModel->GetRelativePose();
-    
+
     // Update pose based on new LED state
     if (on)
     {
@@ -1076,7 +1076,7 @@ void GazeboTaskboardSlot1::TurnOnLeds()
     {
         // Power switch LED
         SetLedState(leds->powerSwitchLed, true);
-        
+
         // Rocker switch LEDs
         if (state->rockerSwitchA01State == eThreeWayState_Up)
         {
@@ -1132,12 +1132,12 @@ void GazeboTaskboardSlot1::TurnOffAllLeds()
 //----------------------------------------------------------------------------------------
 /**
  * @brief Peforms power cover manipulation.
- * 
+ *
  * Rotates the cover on the given angle.
- * 
+ *
  * @param request the request object with manipulation parameters
  * @param response the response object
- * 
+ *
  * @return true if the operation succeeded, otherwise false
  */
 bool GazeboTaskboardSlot1::ManipulatePowerCover(
@@ -1145,7 +1145,7 @@ bool GazeboTaskboardSlot1::ManipulatePowerCover(
 {
     math::Pose globalPose = model->GetWorldPose();
     const double velocity = request.angle / request.duration;
-    
+
     PowerCoverManipulationState &manipState = manipulationState->powerCover;
 
     manipState.duration = request.duration;
@@ -1158,12 +1158,12 @@ bool GazeboTaskboardSlot1::ManipulatePowerCover(
 
 /**
  * @brief Peforms power switch manipulation.
- * 
+ *
  * Rotates the switch on the given angle.
- * 
+ *
  * @param request the request object with manipulation parameters
  * @param response the response object
- * 
+ *
  * @return true if the operation succeeded, otherwise false
  */
 bool GazeboTaskboardSlot1::ManipulatePowerSwitch(
@@ -1171,7 +1171,7 @@ bool GazeboTaskboardSlot1::ManipulatePowerSwitch(
 {
     math::Pose globalPose = model->GetWorldPose();
     const double velocity = request.angle / request.duration;
-    
+
     PowerSwitchManipulationState &manipState = manipulationState->powerSwitch;
 
     manipState.duration = request.duration;
@@ -1184,19 +1184,19 @@ bool GazeboTaskboardSlot1::ManipulatePowerSwitch(
 
 /**
  * @brief Peforms rocker switch manipulation.
- * 
+ *
  * Applies the given amount of torque to the rocker switch.
- * 
+ *
  * @param request the request object with manipulation parameters
  * @param response the response object
- * 
+ *
  * @return true if the operation succeeded, otherwise false
  */
 bool GazeboTaskboardSlot1::ManipulateRockerSwitch(
     ManipulateRockerSwitch::Request& request, ManipulateRockerSwitch::Response& response)
 {
     math::Pose globalPose = model->GetWorldPose();
-    
+
     RockerSwitchManipulationState &manipState = manipulationState->rockerSwitch;
 
     manipState.startTime = GetTime();
@@ -1209,12 +1209,12 @@ bool GazeboTaskboardSlot1::ManipulateRockerSwitch(
 
 /**
  * @brief Peforms numpad buttons manipulation.
- * 
+ *
  * Applies the given amount of force to the given button.
- * 
+ *
  * @param request the request object with manipulation parameters
  * @param response the response object
- * 
+ *
  * @return true if the operation succeeded, otherwise false
  */
 bool GazeboTaskboardSlot1::ManipulateNumPad(
@@ -1225,7 +1225,7 @@ bool GazeboTaskboardSlot1::ManipulateNumPad(
         return false;
     }
     NumPadButtonManipulationState &manipState = manipulationState->numPadButtons[request.index];
-    
+
     manipState.startTime = GetTime();
     manipState.duration = request.duration;
     manipState.force = math::Vector3(0, 0, -request.force);
@@ -1236,13 +1236,13 @@ bool GazeboTaskboardSlot1::ManipulateNumPad(
 
 /**
  * @brief Peforms safe toggle (A03/A04/A05) manipulation.
- * 
- * Applies the given amount of force to the given toggle or rotates the 
+ *
+ * Applies the given amount of force to the given toggle or rotates the
  * toggle on the given angle.
- * 
+ *
  * @param request the request object with manipulation parameters
  * @param response the response object
- * 
+ *
  * @return true if the operation succeeded, otherwise false
  */
 bool GazeboTaskboardSlot1::ManipulateSafeToggle(
@@ -1293,7 +1293,7 @@ void GazeboTaskboardSlot1::HandleManipulation()
             linkPowerCover->SetAngularVel(ZERO_VECTOR);
             manipulationState->powerCover.startTime = 0.0;
         }
-        else 
+        else
         {
             linkPowerCover->SetAngularVel(manipulationState->powerCover.angularVelocity);
         }
@@ -1307,7 +1307,7 @@ void GazeboTaskboardSlot1::HandleManipulation()
             linkPowerSwitch->SetAngularVel(ZERO_VECTOR);
             manipulationState->powerSwitch.startTime = 0.0;
         }
-        else 
+        else
         {
             linkPowerSwitch->SetAngularVel(manipulationState->powerSwitch.angularVelocity);
         }
@@ -1386,13 +1386,13 @@ void GazeboTaskboardSlot1::HandleManipulation()
 
 /**
  * @brief Calculates empirical torque vector used to simulate switches/toggles rotation.
- * 
+ *
  * @param deviationAngle the angle value counted from some central direction
  * @param initialValue specifies the initial amount of torque (this will be scaled by torqueCoeff)
  * @param snapCoeff scales the mantissa value
  * @param snapExp the exponent in the empirical expression
  * @param torqueCoeff the coefficient used to scale the entire torque vector
- * 
+ *
  * @return the computed torque vector
  */
 math::Vector3 GazeboTaskboardSlot1::computeEmpiricalTorque(
@@ -1410,7 +1410,7 @@ math::Vector3 GazeboTaskboardSlot1::computeEmpiricalTorque(
 
 /**
  * @brief Gets current simulation time in seconds.
- * 
+ *
  * @return current simulation time in seconds
  */
 double GazeboTaskboardSlot1::GetTime() const
@@ -1430,7 +1430,7 @@ GazeboTaskboardSlot1::Led::Led()
 
 /**
  * @brief Led structure constructor that initializes led instance with provided values.
- * 
+ *
  * @param index_ the led index
  * @param numPadLed_ whether it's the led for numpad button or not
  * @param color_ the led color in ON state
@@ -1446,7 +1446,7 @@ GazeboTaskboardSlot1::Led::Led(int index_, bool numPadLed_, LedColor color_, mat
 
 /**
  * @brief Creates led's model in the physics world.
- * 
+ *
  * @param world the physics world instance
  */
 void GazeboTaskboardSlot1::Led::CreateModel(physics::WorldPtr world)
@@ -1504,10 +1504,7 @@ void GazeboTaskboardSlot1::Led::CreateModel(physics::WorldPtr world)
 
     // Get LED model description depending on LED type
     std::string ledModel;
-    ledModel = boost::str(boost::format("<cylinder>\r\n\
-								<length>%1%</length>\r\n\
-								<radius>%2%</radius>\r\n\
-							</cylinder>") 
+    ledModel = boost::str(boost::format("<cylinder length='%1%' radius='%2%'/>")
                               % (numPadLed ? NUMPAD_LED_LENGTH : SIMPLE_LED_LENGTH)
                               % (numPadLed ? NUMPAD_LED_RADIUS : SIMPLE_LED_RADIUS));
 
@@ -1515,14 +1512,14 @@ void GazeboTaskboardSlot1::Led::CreateModel(physics::WorldPtr world)
     double roll = pose.rot.GetRoll();
     double pitch = pose.rot.GetPitch();
     double yaw = pose.rot.GetYaw();
-    std::string xml = boost::str(boost::format(sdfTemplate) 
-                                 % pose.pos.x % pose.pos.y 
+    std::string xml = boost::str(boost::format(sdfTemplate)
+                                 % pose.pos.x % pose.pos.y
                                  % roll % pitch % yaw);
     std::string xml2 = xml;
 
     // SDF xml for turned on LED
-    boost::replace_all(xml, "MODELNAME", ledName); 
-    boost::replace_all(xml, "ZPOS", boost::str(boost::format("%1%") % (pose.pos.z + LED_HIDE_OFFSET))); 
+    boost::replace_all(xml, "MODELNAME", ledName);
+    boost::replace_all(xml, "ZPOS", boost::str(boost::format("%1%") % (pose.pos.z + LED_HIDE_OFFSET)));
     boost::replace_all(xml, "LINKNAME", ledLinkName);
     boost::replace_all(xml, "COLLISIONNAME", ledCollisionName);
     boost::replace_all(xml, "VISUALNAME", ledVisualName);
@@ -1531,7 +1528,7 @@ void GazeboTaskboardSlot1::Led::CreateModel(physics::WorldPtr world)
 
     // SDF xml for turned off LED
     boost::replace_all(xml2, "MODELNAME", ledName2);
-    boost::replace_all(xml2, "ZPOS", boost::str(boost::format("%1%") % (pose.pos.z + LED_HIDE_OFFSET2))); 
+    boost::replace_all(xml2, "ZPOS", boost::str(boost::format("%1%") % (pose.pos.z + LED_HIDE_OFFSET2)));
     boost::replace_all(xml2, "LINKNAME", ledLinkName2);
     boost::replace_all(xml2, "COLLISIONNAME", ledCollisionName2);
     boost::replace_all(xml2, "VISUALNAME", ledVisualName2);
@@ -1541,7 +1538,7 @@ void GazeboTaskboardSlot1::Led::CreateModel(physics::WorldPtr world)
     // Send request to physics engine to create LED models
     sdf::SDF ledSDF;
     ledSDF.SetFromString(xml);
-    
+
     sdf::SDF ledSDF2;
     ledSDF2.SetFromString(xml2);
 
@@ -1566,7 +1563,7 @@ void GazeboTaskboardSlot1::Led::CreateModel(physics::WorldPtr world)
 
 /**
  * @brief Initializes model references and position the led in the world.
- * 
+ *
  * @param world the physics world instance
  */
 void GazeboTaskboardSlot1::Led::SetupModel(physics::WorldPtr world)
@@ -1598,9 +1595,9 @@ void GazeboTaskboardSlot1::Led::SetupModel(physics::WorldPtr world)
 //----------------------------------------------------------------------------------------
 /**
  * @brief TaskboardLeds constructor.
- * 
+ *
  * Initializes all leds.
- * 
+ *
  * @param modelPose the taskboard model pose
  */
 GazeboTaskboardSlot1::TaskboardLeds::TaskboardLeds(const math::Pose& modelPose)
@@ -1641,10 +1638,10 @@ GazeboTaskboardSlot1::TaskboardLeds::TaskboardLeds(const math::Pose& modelPose)
 
 /**
  * @brief Creates led's models in the physics world.
- * 
- * Called on the first update frame. Does not work correctly if called from 
+ *
+ * Called on the first update frame. Does not work correctly if called from
  * plugin's Load method.
- * 
+ *
  * @param world the physics world instance
  */
 void GazeboTaskboardSlot1::TaskboardLeds::CreateModels(physics::WorldPtr world)
@@ -1664,7 +1661,7 @@ void GazeboTaskboardSlot1::TaskboardLeds::CreateModels(physics::WorldPtr world)
 
 /**
  * @brief Positions led's models in the world.
- * 
+ *
  * @param world the physics world instance
  */
 void GazeboTaskboardSlot1::TaskboardLeds::SetupModels(physics::WorldPtr world)
