@@ -1,9 +1,11 @@
-#include "gazebo_interface/GazeboInterface.h"
+#include <gazebo_interface/GazeboInterface.h>
+
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/Joint.hh>
 #include <gazebo/physics/World.hh>
-
 #include <r2_msgs/JointStatusArray.h>
+
+#include <ros/console.h>
 
 using namespace gazebo;
 
@@ -181,9 +183,10 @@ void GazeboInterface::Init()
 {
     ROS_DEBUG("add joints");
     // add all joints to controller
+    physics::Joint_V _joints = modelPtr->GetJoints();
     for (unsigned int i = 0; i < modelPtr->GetJointCount(); ++i)
     {
-        physics::JointPtr jPtr = modelPtr->GetJoints()[i];
+        physics::JointPtr jPtr = _joints[i];
         robotControllerPtr->addJoint(jPtr, advancedMode);
         ROS_DEBUG("Add %s to controller", jPtr->GetName().c_str());
     }
@@ -387,9 +390,10 @@ void GazeboInterface::Init()
     // if not in advanced mode, tell the controller to hold the joint positions
     if (!advancedMode)
     {
+        physics::Joint_V _joints = modelPtr->GetJoints();
         for (unsigned int i = 0; i < modelPtr->GetJointCount(); ++i)
         {
-            physics::JointPtr jPtr = modelPtr->GetJoints()[i];
+            physics::JointPtr jPtr = _joints[i];
             robotControllerPtr->setJointPosTarget(jPtr->GetName(), jPtr->GetAngle(0).Radian());
         }
     }
@@ -426,16 +430,17 @@ void GazeboInterface::update()
         sensor_msgs::JointStatePtr msgPtr(new sensor_msgs::JointState);
         msgPtr->header.stamp = ros::Time::now();
         // add all joints to jointState message
+        physics::Joint_V _joints = modelPtr->GetJoints();
         for (unsigned int i = 0; i < modelPtr->GetJointCount(); ++i)
         {
-            physics::JointPtr jPtr = modelPtr->GetJoints()[i];
+            physics::JointPtr jPtr = _joints[i];
 
             // joint
             std::string name = jPtr->GetName();
             msgPtr->name.push_back(name);
             msgPtr->position.push_back(jPtr->GetAngle(0).Radian());
             msgPtr->velocity.push_back(jPtr->GetVelocity(0));
-            msgPtr->effort.push_back(jPtr->GetForce(0));
+            msgPtr->effort.push_back(jPtr->GetForce((unsigned int)0));
 
             // motor
             std::string::size_type index = name.find("/joint");
@@ -444,13 +449,13 @@ void GazeboInterface::update()
                 msgPtr->name.push_back(name.replace(index, 6, "/motor"));
                 msgPtr->position.push_back(jPtr->GetAngle(0).Radian());
                 msgPtr->velocity.push_back(jPtr->GetVelocity(0));
-                msgPtr->effort.push_back(jPtr->GetForce(0));
+                msgPtr->effort.push_back(jPtr->GetForce((unsigned int)0));
 
                 // encoder
                 msgPtr->name.push_back(name.replace(index, 6, "/encoder"));
                 msgPtr->position.push_back(jPtr->GetAngle(0).Radian());
                 msgPtr->velocity.push_back(jPtr->GetVelocity(0));
-                msgPtr->effort.push_back(jPtr->GetForce(0));
+                msgPtr->effort.push_back(jPtr->GetForce((unsigned int)0));
             }
         }
         jointStatePub.publish(msgPtr);

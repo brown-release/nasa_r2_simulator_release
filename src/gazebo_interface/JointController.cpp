@@ -1,4 +1,6 @@
-#include "gazebo_interface/JointController.h"
+#include <gazebo_interface/JointController.h>
+
+#include <ros/console.h>
 
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/World.hh>
