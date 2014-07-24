@@ -1,0 +1,12 @@
+Source: ros-hydro-gazebo-gripper
+Section: misc
+Priority: extra
+Maintainer: Stephen Hart <stephen.hart@nasa.gov>
+Build-Depends: debhelper (>= 9.0.0), gazebo, ros-hydro-catkin, ros-hydro-r2-msgs, ros-hydro-roscpp, ros-hydro-rospy, ros-hydro-sensor-msgs, ros-hydro-std-msgs
+Homepage: http://wiki.ros.org/gazebo_gripper
+Standards-Version: 3.9.2
+
+Package: ros-hydro-gazebo-gripper
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
+Description: Gazebo plugin for R2 Gripper
