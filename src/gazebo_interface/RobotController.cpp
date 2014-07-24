@@ -1,4 +1,4 @@
-#include "gazebo_interface/RobotController.h"
+#include <gazebo_interface/RobotController.h>
 
 #include <gazebo/physics/Model.hh>
 #include <gazebo/physics/World.hh>
@@ -7,7 +7,7 @@
 
 #include <ros/ros.h>
 
-#include "r2_msgs/JointStatusArray.h"
+#include <r2_msgs/JointStatusArray.h>
 
 using namespace gazebo;
 
